@@ -1,5 +1,7 @@
 package ru.hse.restaurant.project.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.hse.restaurant.project.api.ClientApi;
@@ -17,10 +19,11 @@ import ru.hse.restaurant.project.repository.SimpleDishRepository;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/v1/client")
 public class ClientController implements ClientApi {
-    OrderInvoker orderInvoker = new Waiter(new SimpleDishRepository());
-    OrderDecorator orderDecorator = new OrderDecoratorImpl();
+    private final OrderInvoker orderInvoker;
+    private final OrderDecorator orderDecorator;
 
 //    public ClientController(IOrderInvoker orderInvoker, IOrderDecorator orderDecorator) {
 //        this.orderInvoker = orderInvoker;
@@ -34,7 +37,8 @@ public class ClientController implements ClientApi {
     }
 
     @Override
-    @PostMapping("/createOrder")
+    @Operation(summary = "Создание заказа")
+    @PostMapping("/create-order")
     public void createOrder() {
         orderInvoker.createOrder(orderDecorator);
     }

@@ -6,7 +6,6 @@ import org.springframework.context.annotation.ComponentScan;
 import ru.hse.restaurant.project.controller.ClientController;
 
 @SpringBootApplication
-@ComponentScan(basePackageClasses= ClientController.class)
 public class ProjectApplication {
 
 	public static void main(String[] args) {

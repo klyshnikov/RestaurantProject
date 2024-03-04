@@ -1,26 +1,28 @@
 package ru.hse.restaurant.project.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.hse.restaurant.project.api.AdminApi;
 import ru.hse.restaurant.project.entity.Dish;
 import ru.hse.restaurant.project.exceptions.PriceLessThanZeroException;
 import ru.hse.restaurant.project.exceptions.TimeToCookLessThanZeroException;
 import ru.hse.restaurant.project.repository.DishRepository;
-import ru.hse.restaurant.project.repository.SimpleDishRepository;
+
+import java.util.List;
 
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api/v1/admin")
 public class AdminController implements AdminApi {
 
-    DishRepository dishRepository = new SimpleDishRepository();
+    private final DishRepository dishRepository;
 
     @Override
     @PostMapping("/addDishToMenu")
     public void addDishToMenu(@RequestBody Dish dish) throws TimeToCookLessThanZeroException, PriceLessThanZeroException {
         dishRepository.addDish(dish);
     }
-
 
     @Override
     @PutMapping("/changeDish")
@@ -48,5 +50,10 @@ public class AdminController implements AdminApi {
     @Override
     public void deleteDish(String name) {
         dishRepository.deleteDish(name);
+    }
+
+    @GetMapping
+    public List<Dish> getMenu() {
+        return dishRepository.getAllDishes();
     }
 }

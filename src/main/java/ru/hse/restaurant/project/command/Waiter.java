@@ -1,5 +1,7 @@
 package ru.hse.restaurant.project.command;
 
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.hse.restaurant.project.decorator.OrderDecorator;
 import ru.hse.restaurant.project.command.commands.Command;
 import ru.hse.restaurant.project.command.commands.MakeDishCommand;
@@ -13,12 +15,11 @@ import ru.hse.restaurant.project.exceptions.OrderIsNotPayedException;
 import java.util.List;
 import java.util.Map;
 
+@Component
+@AllArgsConstructor
 public class Waiter implements OrderInvoker {
     private final DishRepository dishRepository;
 
-    public Waiter(DishRepository dishDao) {
-        this.dishRepository = dishDao;
-    }
 
     @Override
     public List<Dish> getActualMenu() {

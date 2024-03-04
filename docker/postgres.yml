@@ -1,0 +1,10 @@
+version: '3'
+services:
+  base-project-pg:
+    image: postgres:13.3
+    environment:
+      - POSTGRES_USER=misha
+      - POSTGRES_PASSWORD=misha
+      - POSTGRES_DB=misha
+    ports:
+      - '5432:5432'

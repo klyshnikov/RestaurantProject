@@ -1,5 +1,6 @@
 package ru.hse.restaurant.project.repository;
 
+import org.springframework.stereotype.Component;
 import ru.hse.restaurant.project.entity.Dish;
 import ru.hse.restaurant.project.entity.Review;
 
@@ -7,12 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Component
 public class SimpleDishRepository implements DishRepository {
-    ArrayList<Dish> dishes;
+    ArrayList<Dish> dishes = new ArrayList<Dish>();
 
-    public SimpleDishRepository() {
-        dishes = new ArrayList<Dish>();
-    }
 
     @Override
     public List<Dish> getAllDishes() {

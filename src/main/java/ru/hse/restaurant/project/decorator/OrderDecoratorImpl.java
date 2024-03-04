@@ -1,10 +1,14 @@
 package ru.hse.restaurant.project.decorator;
 
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.hse.restaurant.project.entity.Dish;
 import ru.hse.restaurant.project.entity.Order;
 
 import java.util.Map;
 
+@Component
+@AllArgsConstructor
 public class OrderDecoratorImpl implements OrderDecorator {
     private final Order order;
     private Boolean payed = false;
