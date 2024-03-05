@@ -13,9 +13,11 @@ public interface OrderInvoker {
     public List<Dish> getActualMenu();
     public void addDish(String dishName, OrderDecorator orderDecorator);
     public void prepare(OrderDecorator orderDecorator) throws InterruptedException;
-    public void pay(OrderDecorator orderDecorator);
+    public void pay(OrderDecorator orderDecorator) throws OrderIsNotAlreadyCookedException;
     public Order getOrder(OrderDecorator orderDecorator) throws OrderIsNotPayedException, OrderIsNotAlreadyCookedException, OrderIsNotCreatedYetException;
     public void cansel(OrderDecorator orderDecorator);
     public void createOrder(OrderDecorator orderDecorator);
+
+    String getOrderInfo(OrderDecorator orderDecorator);
 
 }

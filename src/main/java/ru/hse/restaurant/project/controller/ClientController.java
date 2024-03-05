@@ -44,14 +44,14 @@ public class ClientController implements ClientApi {
     }
 
     @Override
-    @PutMapping("/addInOrder/{dishName}")
+    @PutMapping("/add-in-order/{dish-name}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void addInOrder(@PathVariable String dishName) {
         orderInvoker.addDish(dishName, orderDecorator);
     }
 
     @Override
-    @PutMapping("/addInOrder/{dishName}/{amount}")
+    @PutMapping("/add-in-order/{dish-name}/{amount}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void addInOrder(@PathVariable String dishName, @PathVariable int amount) {
         for (int i = 0; i<amount; ++i) {
@@ -60,27 +60,33 @@ public class ClientController implements ClientApi {
     }
 
     @Override
-    @PostMapping("/prepareOrder")
+    @PostMapping("/prepare-order")
     public void prepareOrder() throws InterruptedException {
         orderInvoker.prepare(orderDecorator);
     }
 
 
     @Override
-    @PostMapping("/payForOrder")
-    public void payForOrder() {
+    @PostMapping("/pay-for-order")
+    public void payForOrder() throws OrderIsNotAlreadyCookedException {
         orderInvoker.pay(orderDecorator);
     }
 
     @Override
-    @GetMapping("/getOrder")
+    @GetMapping("/get-order")
     public Order getOrder() throws OrderIsNotAlreadyCookedException, OrderIsNotPayedException, OrderIsNotCreatedYetException {
         return orderInvoker.getOrder(orderDecorator);
     }
 
     @Override
-    @PostMapping("/canselOrder")
+    @PostMapping("/cansel-order")
     public void canselOrder() {
         orderInvoker.cansel(orderDecorator);
+    }
+
+    @Override
+    @GetMapping("/get-order-info")
+    public String getOrderInfo() {
+        return orderInvoker.getOrderInfo(orderDecorator);
     }
 }

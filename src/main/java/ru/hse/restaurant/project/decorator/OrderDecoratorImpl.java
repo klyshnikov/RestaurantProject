@@ -10,8 +10,7 @@ import java.util.Map;
 @Component
 @AllArgsConstructor
 public class OrderDecoratorImpl implements OrderDecorator {
-    private final Order order;
-    private Boolean payed = false;
+    private Order order;
     private int numberOfCookedDishes = 0;
     private OrderState orderState = OrderState.Stage1_NotExist;
 
@@ -20,39 +19,45 @@ public class OrderDecoratorImpl implements OrderDecorator {
     }
 
     @Override
+    public void setState1_NotExist() {
+        orderState = OrderState.Stage1_NotExist;
+    }
+
+    @Override
+    public void setState2_Creating() {
+        orderState = OrderState.Stage2_Creating;
+    }
+
+    @Override
+    public void setState3_Preparing() {
+        orderState = OrderState.Stage3_Preparing;
+    }
+
+    @Override
+    public void setState4_Ready() {
+        orderState = OrderState.Stage4_Ready;
+    }
+
+    @Override
+    public void setState5_Payed() {
+        orderState = OrderState.Stage5_Payed;
+    }
+
+    @Override
     public void addDish(Dish dish) {
         order.addDish(dish);
     }
 
     @Override
-    public void makePayed() {
-        payed = true;
-    }
-
-    @Override
     public synchronized void increaseNumberOfCookedDishes() {
-        numberOfCookedDishes++;
-    }
+        if (orderState == OrderState.Stage3_Preparing) {
+            numberOfCookedDishes++;
+        }
 
-//    @Override
-//    public Boolean isPrepared() {
-//        return orderState != OrderState.Stage1_NotExist && orderState != OrderState.Stage2_Creating;
-//    }
-
-    @Override
-    public void setNotExisted() {
-        orderState = OrderState.Stage1_NotExist;
-    }
-
-    @Override
-    public void clearFields() {
-        numberOfCookedDishes = 0;
-        // Вообще бесполезная вещь
-    }
-
-    @Override
-    public void setExisted() {
-        orderState = OrderState.Stage2_Creating;
+        // Не потокобезопасно, но ничего не слечится, если несколько потоков обртятся в функцию
+        if (isCooked()) {
+            orderState = OrderState.Stage4_Ready;
+        }
     }
 
     @Override
@@ -66,18 +71,26 @@ public class OrderDecoratorImpl implements OrderDecorator {
     }
 
     @Override
-    public Boolean isPayed() {
-        return payed;
-    }
-
-    @Override
-    public Boolean isExist() {
-        return orderState != OrderState.Stage1_NotExist;
-    }
-
-    @Override
     public Order getOrder() {
         return order;
+    }
+
+
+    @Override
+    public OrderState getOrderState() {
+        return orderState;
+    }
+
+    @Override
+    public int getNumberOfCookedDishes() {
+        return numberOfCookedDishes;
+    }
+
+    @Override
+    public void setDefault() {
+        order = new Order();
+        numberOfCookedDishes = 0;
+        orderState = OrderState.Stage1_NotExist;
     }
 
 }

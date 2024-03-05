@@ -19,9 +19,11 @@ public interface ClientApi {
 
     public void prepareOrder() throws InterruptedException;
 
-    public void payForOrder();
+    public void payForOrder() throws OrderIsNotAlreadyCookedException;
 
     public Order getOrder() throws OrderIsNotAlreadyCookedException, OrderIsNotPayedException, OrderIsNotCreatedYetException;
 
     public void canselOrder();
+
+    public String getOrderInfo();
 }

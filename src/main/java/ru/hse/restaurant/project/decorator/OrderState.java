@@ -5,4 +5,5 @@ public enum OrderState {
     Stage2_Creating,
     Stage3_Preparing,
     Stage4_Ready,
+    Stage5_Payed
 }

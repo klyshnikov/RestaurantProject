@@ -19,19 +19,22 @@ public class AdminController implements AdminApi {
     private final DishRepository dishRepository;
 
     @Override
-    @PostMapping("/addDishToMenu")
+    @PostMapping("/add-dish-to-menu")
     public void addDishToMenu(@RequestBody Dish dish) throws TimeToCookLessThanZeroException, PriceLessThanZeroException {
         dishRepository.addDish(dish);
     }
 
     @Override
-    @PutMapping("/changeDish")
-    public void changeDish(@RequestBody Dish oldDish, @RequestBody Dish newDish) throws TimeToCookLessThanZeroException, PriceLessThanZeroException {
-        dishRepository.addDish(newDish);
+    @PutMapping("set-name/{dish-name}/{new-name}")
+    public void setName(@PathVariable String dishName, @PathVariable String newName) {
+        Dish dish = dishRepository.getDish(dishName);
+        dish.setName(newName);
+        dishRepository.deleteDish(dishName);
+        dishRepository.addDish(dish);
     }
 
     @Override
-    @PutMapping("/setTimeToCook/{dishName}/{secondsToCook}")
+    @PutMapping("/setTimeToCook/{dish-name}/{seconds-to-cook}")
     public void setTimeToCook(@PathVariable String dishName, @PathVariable int secondsToCook) throws TimeToCookLessThanZeroException {
         Dish dish = dishRepository.getDish(dishName);
         //Duration cookDuration = Duration.ofSeconds(secondsToCook);
@@ -40,7 +43,7 @@ public class AdminController implements AdminApi {
     }
 
     @Override
-    @PutMapping("/setTimeToCook/{dishName}/{prise}")
+    @PutMapping("/set-prise/{dish-name}/{prise}")
     public void setPrise(@PathVariable String dishName, @PathVariable double prise) throws PriceLessThanZeroException {
         Dish dish = dishRepository.getDish(dishName);
         dish.setPrice(prise);
@@ -48,11 +51,20 @@ public class AdminController implements AdminApi {
     }
 
     @Override
+    @PutMapping("/set-description/{dish-name}")
+    public void setDescription(@PathVariable String dishName, @RequestBody String description) {
+        Dish dish = dishRepository.getDish(dishName);
+        dish.setDescription(description);
+        dishRepository.addDish(dish);
+    }
+
+    @Override
+    @PutMapping("/delete-dish")
     public void deleteDish(String name) {
         dishRepository.deleteDish(name);
     }
 
-    @GetMapping
+    @GetMapping("/get-menu")
     public List<Dish> getMenu() {
         return dishRepository.getAllDishes();
     }

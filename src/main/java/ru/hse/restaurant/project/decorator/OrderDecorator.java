@@ -5,18 +5,21 @@ import ru.hse.restaurant.project.entity.Order;
 
 public interface OrderDecorator {
 
-    public void addDish(Dish dish);
-    public void makePayed();
-    public Boolean isCooked();
-    public Boolean isPayed();
+    void setState1_NotExist();
+    void setState2_Creating();
+    void setState3_Preparing();
+    void setState4_Ready();
+    void setState5_Payed();
 
-    public Boolean isExist();
-    public Order getOrder();
-    public void increaseNumberOfCookedDishes();
-    //public Boolean isCreated();
-    public void setNotExisted();
-    public void clearFields();
+    OrderState getOrderState();
+    Order getOrder();
 
-    public void setExisted();
+    void addDish(Dish dish);
+    Boolean isCooked();
+
+    void increaseNumberOfCookedDishes();
+    int getNumberOfCookedDishes();
+
+    void setDefault();
 
 }
