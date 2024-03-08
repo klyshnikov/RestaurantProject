@@ -1,11 +1,12 @@
 package ru.hse.restaurant.project.exceptions;
 
-public class OrderIsNotAlreadyCookedException extends RuntimeException {
-    public OrderIsNotAlreadyCookedException(String message) {
+public class DishIsNotExistException extends RuntimeException {
+    public DishIsNotExistException(String message) {
         super("Заказ еще не приготовился! Ждите ... ");
     }
 
-    public OrderIsNotAlreadyCookedException() {
+    public DishIsNotExistException() {
         super("Заказ еще не приготовился! Ждите ... ");
     }
+
 }

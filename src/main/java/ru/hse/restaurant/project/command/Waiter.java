@@ -36,8 +36,21 @@ public class Waiter implements OrderInvoker {
 
     @Override
     public void prepare(OrderDecorator orderDecorator) throws InterruptedException {
-        if (orderDecorator.getOrderState() != OrderState.Stage2_Creating) {
-            throw new OrderIsNotCreatedYetException("Заказ не создан!");
+        if (orderDecorator.getOrderState() == OrderState.Stage1_NotExist) {
+            throw new OrderIsNotCreatedYetException();
+        }
+
+        if (orderDecorator.getOrderState() == OrderState.Stage3_Preparing) {
+            throw new RuntimeException("Заказ уже готовится!");
+        }
+
+        if (orderDecorator.getOrderState() == OrderState.Stage4_Ready
+            || orderDecorator.getOrderState() == OrderState.Stage5_Payed) {
+            throw new RuntimeException("Заказ уже готов!");
+        }
+
+        if (orderDecorator.getOrder().getDish().isEmpty()) {
+            throw new RuntimeException("Заказ пустой. Готовить нечего.");
         }
         orderDecorator.setState3_Preparing();
 
@@ -51,9 +64,18 @@ public class Waiter implements OrderInvoker {
 
     @Override
     public void pay(OrderDecorator orderDecorator) throws OrderIsNotAlreadyCookedException {
-        if (orderDecorator.getOrderState() != OrderState.Stage4_Ready) {
-            throw new OrderIsNotAlreadyCookedException("Заказ еще не приготовлен!");
+        if (orderDecorator.getOrderState() == OrderState.Stage1_NotExist) {
+            throw new OrderIsNotCreatedYetException();
         }
+
+        if (orderDecorator.getOrderState() == OrderState.Stage2_Creating) {
+            throw new RuntimeException("Заказ еще на этапе формирования. Нельзя оплатить");
+        }
+
+        if (orderDecorator.getOrderState() != OrderState.Stage4_Ready) {
+            throw new OrderIsNotAlreadyCookedException();
+        }
+
         orderDecorator.setState5_Payed();
     }
 
@@ -64,7 +86,7 @@ public class Waiter implements OrderInvoker {
         // Тут напрашивается цепочка обязанностей, но по мне она тут лишняя,
         // цепочка проверок не такая и большая.
         if (orderDecorator.getOrderState() != OrderState.Stage5_Payed) {
-            throw new OrderIsNotPayedException("Заказ надо сделать, дождаться и оплатить!");
+            throw new RuntimeException("Заказ надо сделать, дождаться и оплатить!");
         }
 
         return orderDecorator.getOrder();
@@ -72,6 +94,10 @@ public class Waiter implements OrderInvoker {
 
     @Override
     public void cansel(OrderDecorator orderDecorator) {
+        if (orderDecorator.getOrderState() == OrderState.Stage4_Ready
+            || orderDecorator.getOrderState() == OrderState.Stage5_Payed) {
+            throw new RuntimeException("Уже поздно отменять - заказ приготовлен");
+        }
 
         orderDecorator.setDefault();
     }
@@ -80,6 +106,8 @@ public class Waiter implements OrderInvoker {
     public void createOrder(OrderDecorator orderDecorator) {
         if (orderDecorator.getOrderState() == OrderState.Stage1_NotExist) {
             orderDecorator.setState2_Creating();
+        } else {
+            throw new RuntimeException("Заказ уже создан!");
         }
     }
 

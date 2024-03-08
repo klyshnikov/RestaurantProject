@@ -1,6 +1,7 @@
 package ru.hse.restaurant.project.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hse.restaurant.project.api.AdminApi;
 import ru.hse.restaurant.project.entity.Dish;
@@ -20,48 +21,77 @@ public class AdminController implements AdminApi {
 
     @Override
     @PostMapping("/add-dish-to-menu")
-    public void addDishToMenu(@RequestBody Dish dish) throws TimeToCookLessThanZeroException, PriceLessThanZeroException {
-        dishRepository.addDish(dish);
+    public ResponseEntity<String> addDishToMenu(@RequestBody Dish dish) throws TimeToCookLessThanZeroException, PriceLessThanZeroException {
+        try {
+            dishRepository.addDish(dish);
+            return ResponseEntity.ok("Добавлено!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.toString());
+        }
     }
 
     @Override
-    @PutMapping("set-name/{dish-name}/{new-name}")
-    public void setName(@PathVariable String dishName, @PathVariable String newName) {
-        Dish dish = dishRepository.getDish(dishName);
-        dish.setName(newName);
-        dishRepository.deleteDish(dishName);
-        dishRepository.addDish(dish);
+    @PutMapping("/set-name/{dish-name}/{new-name}")
+    public ResponseEntity<String> setName(@PathVariable String dishName, @PathVariable String newName) {
+        try {
+            Dish dish = dishRepository.getDish(dishName);
+            dish.setName(newName);
+            dishRepository.deleteDish(dishName);
+            dishRepository.addDish(dish);
+            return ResponseEntity.ok("Имя установлено!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.toString());
+        }
     }
 
     @Override
     @PutMapping("/setTimeToCook/{dish-name}/{seconds-to-cook}")
-    public void setTimeToCook(@PathVariable String dishName, @PathVariable int secondsToCook) throws TimeToCookLessThanZeroException {
-        Dish dish = dishRepository.getDish(dishName);
-        //Duration cookDuration = Duration.ofSeconds(secondsToCook);
-        dish.setTimeToCook(secondsToCook);
-        dishRepository.addDish(dish);
+    public ResponseEntity<String> setTimeToCook(@PathVariable String dishName, @PathVariable int secondsToCook) throws TimeToCookLessThanZeroException {
+        try {
+            Dish dish = dishRepository.getDish(dishName);
+            dish.setTimeToCook(secondsToCook);
+            dishRepository.addDish(dish);
+            return ResponseEntity.ok("Время установлено!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.toString());
+        }
     }
 
     @Override
     @PutMapping("/set-prise/{dish-name}/{prise}")
-    public void setPrise(@PathVariable String dishName, @PathVariable double prise) throws PriceLessThanZeroException {
-        Dish dish = dishRepository.getDish(dishName);
-        dish.setPrice(prise);
-        dishRepository.addDish(dish);
+    public ResponseEntity<String> setPrise(@PathVariable String dishName, @PathVariable double prise) throws PriceLessThanZeroException {
+        try {
+            Dish dish = dishRepository.getDish(dishName);
+            dish.setPrice(prise);
+            dishRepository.addDish(dish);
+            return ResponseEntity.ok("Цена установлена!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.toString());
+        }
     }
 
     @Override
     @PutMapping("/set-description/{dish-name}")
-    public void setDescription(@PathVariable String dishName, @RequestBody String description) {
-        Dish dish = dishRepository.getDish(dishName);
-        dish.setDescription(description);
-        dishRepository.addDish(dish);
+    public ResponseEntity<String> setDescription(@PathVariable String dishName, @RequestBody String description) {
+        try {
+            Dish dish = dishRepository.getDish(dishName);
+            dish.setDescription(description);
+            dishRepository.addDish(dish);
+            return ResponseEntity.ok("Описание установлено!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.toString());
+        }
     }
 
     @Override
     @PutMapping("/delete-dish")
-    public void deleteDish(String name) {
-        dishRepository.deleteDish(name);
+    public ResponseEntity<String> deleteDish(String name) {
+        try {
+            dishRepository.deleteDish(name);
+            return ResponseEntity.ok("Успешно удалено!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.toString());
+        }
     }
 
     @GetMapping("/get-menu")

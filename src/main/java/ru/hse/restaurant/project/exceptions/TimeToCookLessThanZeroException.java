@@ -1,9 +1,12 @@
 package ru.hse.restaurant.project.exceptions;
 
-public class TimeToCookLessThanZeroException extends Throwable {
-    public String message;
+public class TimeToCookLessThanZeroException extends RuntimeException {
 
     public TimeToCookLessThanZeroException(String message) {
-        this.message = message;
+        super("Вы нарушили закон физики. Время выполнения заказа не должно быть меньше 0");
+    }
+
+    public TimeToCookLessThanZeroException() {
+        super("Вы нарушили закон физики. Время выполнения заказа не должно быть меньше 0");
     }
 }
