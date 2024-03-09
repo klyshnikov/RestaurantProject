@@ -31,7 +31,7 @@ public class AdminController implements AdminApi {
     }
 
     @Override
-    @PutMapping("/set-name/{dish-name}/{new-name}")
+    @PutMapping("/set-name/{dishName}/{newName}")
     public ResponseEntity<String> setName(@PathVariable String dishName, @PathVariable String newName) {
         try {
             Dish dish = dishRepository.getDish(dishName);
@@ -45,7 +45,7 @@ public class AdminController implements AdminApi {
     }
 
     @Override
-    @PutMapping("/setTimeToCook/{dish-name}/{seconds-to-cook}")
+    @PutMapping("/set-time-to-cook/{dishName}/{secondsToCook}")
     public ResponseEntity<String> setTimeToCook(@PathVariable String dishName, @PathVariable int secondsToCook) throws TimeToCookLessThanZeroException {
         try {
             Dish dish = dishRepository.getDish(dishName);
@@ -58,7 +58,7 @@ public class AdminController implements AdminApi {
     }
 
     @Override
-    @PutMapping("/set-prise/{dish-name}/{prise}")
+    @PutMapping("/set-prise/{dishName}/{prise}")
     public ResponseEntity<String> setPrise(@PathVariable String dishName, @PathVariable double prise) throws PriceLessThanZeroException {
         try {
             Dish dish = dishRepository.getDish(dishName);
@@ -71,7 +71,7 @@ public class AdminController implements AdminApi {
     }
 
     @Override
-    @PutMapping("/set-description/{dish-name}")
+    @PutMapping("/set-description/{dishName}")
     public ResponseEntity<String> setDescription(@PathVariable String dishName, @RequestBody String description) {
         try {
             Dish dish = dishRepository.getDish(dishName);

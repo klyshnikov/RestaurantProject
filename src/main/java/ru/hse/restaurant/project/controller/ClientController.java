@@ -8,7 +8,6 @@ import ru.hse.restaurant.project.api.ClientApi;
 import ru.hse.restaurant.project.command.OrderInvoker;
 import ru.hse.restaurant.project.decorator.OrderDecorator;
 import ru.hse.restaurant.project.entity.Dish;
-import ru.hse.restaurant.project.entity.Order;
 import ru.hse.restaurant.project.exceptions.OrderIsNotAlreadyCookedException;
 import ru.hse.restaurant.project.exceptions.OrderIsNotCreatedYetException;
 import ru.hse.restaurant.project.exceptions.OrderIsNotPayedException;
@@ -24,7 +23,7 @@ public class ClientController implements ClientApi {
     private final OrderDecorator orderDecorator;
 
     @Override
-    @GetMapping
+    @GetMapping("/get-menu")
     public ResponseEntity<List<Dish>> getMenu() {
         return ResponseEntity.ok(orderInvoker.getActualMenu());
     }
@@ -33,13 +32,17 @@ public class ClientController implements ClientApi {
     @Operation(summary = "Создание заказа")
     @PostMapping("/create-order")
     public ResponseEntity<String> createOrder() {
-        orderInvoker.createOrder(orderDecorator);
-        return ResponseEntity.ok("Заказ успешно создан!");
+        try {
+            orderInvoker.createOrder(orderDecorator);
+            return ResponseEntity.ok("Заказ успешно создан!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.toString());
+        }
     }
 
     @Override
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PutMapping("/add-in-order/{dish-name}")
+    @PutMapping("/add-in-order/{dishName}")
     public ResponseEntity<String> addInOrder(@PathVariable String dishName) {
         try {
             orderInvoker.addDish(dishName, orderDecorator);
@@ -50,7 +53,7 @@ public class ClientController implements ClientApi {
     }
 
     @Override
-    @PutMapping("/add-in-order/{dish-name}/{amount}")
+    @PutMapping("/add-in-order/{dishName}/{amount}")
     public ResponseEntity<String> addInOrder(@PathVariable String dishName, @PathVariable int amount) {
         try {
             for (int i = 0; i<amount; ++i) {
