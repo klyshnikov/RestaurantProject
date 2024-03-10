@@ -1,11 +1,15 @@
 package ru.hse.restaurant.project.command.commands;
 
+import jdk.jfr.Category;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 import ru.hse.restaurant.project.decorator.OrderDecorator;
 import ru.hse.restaurant.project.command.OrderReceiver;
 import ru.hse.restaurant.project.command.Kitchen;
 import ru.hse.restaurant.project.entity.Dish;
 
-public class MakeDishCommand implements Command, Runnable {
+@AllArgsConstructor
+public class MakeDishCommand implements Command {
     Dish dish;
     OrderDecorator orderDecorator;
     OrderReceiver receiver;
@@ -16,18 +20,10 @@ public class MakeDishCommand implements Command, Runnable {
         receiver = new Kitchen();
     }
 
-    @Override
-    public void Execute() throws InterruptedException {
-        Thread thread = new Thread(this);
-        thread.start();
-    }
 
     @Override
-    public void run() {
-        try {
-            receiver.makeDish(dish, orderDecorator);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+    public void Execute() throws InterruptedException {
+        receiver.makeDish(dish, orderDecorator);
     }
+
 }

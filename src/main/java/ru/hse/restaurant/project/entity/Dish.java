@@ -1,5 +1,6 @@
 package ru.hse.restaurant.project.entity;
 import lombok.Data;
+import org.springframework.stereotype.Component;
 import ru.hse.restaurant.project.exceptions.PriceLessThanZeroException;
 import ru.hse.restaurant.project.exceptions.TimeToCookLessThanZeroException;
 

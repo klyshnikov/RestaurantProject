@@ -2,6 +2,7 @@ package ru.hse.restaurant.project.command;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import ru.hse.restaurant.project.command.commands.CanselOrderCommand;
 import ru.hse.restaurant.project.decorator.OrderDecorator;
 import ru.hse.restaurant.project.command.commands.Command;
 import ru.hse.restaurant.project.command.commands.MakeDishCommand;
@@ -56,8 +57,8 @@ public class Waiter implements OrderInvoker {
 
         for (Map.Entry<Dish, Integer> orderPosition : orderDecorator.getOrder().getDish().entrySet()) {
             for (int i = 0; i < orderPosition.getValue(); ++i) {
-                Command prepareThisDishCommand = new MakeDishCommand(orderPosition.getKey(), orderDecorator);
-                prepareThisDishCommand.Execute();
+                var makeDishCommand = new MakeDishCommand(orderPosition.getKey(), orderDecorator);
+                makeDishCommand.Execute();
             }
         }
     }
@@ -99,6 +100,7 @@ public class Waiter implements OrderInvoker {
             throw new RuntimeException("Уже поздно отменять - заказ приготовлен");
         }
 
+        new CanselOrderCommand().Execute();
         orderDecorator.setDefault();
     }
 
