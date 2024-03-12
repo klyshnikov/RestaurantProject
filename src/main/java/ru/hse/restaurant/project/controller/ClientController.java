@@ -8,11 +8,14 @@ import ru.hse.restaurant.project.api.ClientApi;
 import ru.hse.restaurant.project.command.OrderInvoker;
 import ru.hse.restaurant.project.decorator.OrderDecorator;
 import ru.hse.restaurant.project.entity.Dish;
+import ru.hse.restaurant.project.entity.User;
 import ru.hse.restaurant.project.exceptions.OrderIsNotAlreadyCookedException;
 import ru.hse.restaurant.project.exceptions.OrderIsNotCreatedYetException;
 import ru.hse.restaurant.project.exceptions.OrderIsNotPayedException;
 import org.springframework.http.ResponseEntity;
+import ru.hse.restaurant.project.service.AuthService;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -21,6 +24,34 @@ import java.util.List;
 public class ClientController implements ClientApi {
     private final OrderInvoker orderInvoker;
     private final OrderDecorator orderDecorator;
+    private final AuthService authService;
+
+    // Auth
+
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody User user) throws IOException {
+        System.out.println("111");
+        if (authService.register(user)) {
+            return ResponseEntity.ok("Успешно зарегистрированы");
+        }
+
+        return ResponseEntity.badRequest().body("Регистрация не удалась. Возможно, данный пользователь уже существует");
+    }
+
+    @PostMapping("/login/{login}/{password}")
+    public ResponseEntity<String> login(@PathVariable String login, @PathVariable String password) throws IOException {
+        System.out.println("111");
+        if (authService.login(login, password)) {
+            return ResponseEntity.ok("Вы успешно вошли");
+        }
+
+        return ResponseEntity.badRequest().body("Неуспешная попытка входа");
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout() {
+        return ResponseEntity.ok("Вы вышли");
+    }
 
     @Override
     @GetMapping("/get-menu")
@@ -32,6 +63,10 @@ public class ClientController implements ClientApi {
     @Operation(summary = "Создание заказа")
     @PostMapping("/create-order")
     public ResponseEntity<String> createOrder() {
+        if (!authService.isEnterAsUser()) {
+            return ResponseEntity.badRequest().body("Вы не вошли как пользователь");
+        }
+
         try {
             orderInvoker.createOrder(orderDecorator);
             return ResponseEntity.ok("Заказ успешно создан!");
@@ -44,6 +79,10 @@ public class ClientController implements ClientApi {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/add-in-order/{dishName}")
     public ResponseEntity<String> addInOrder(@PathVariable String dishName) {
+        if (!authService.isEnterAsUser()) {
+            return ResponseEntity.badRequest().body("Вы не вошли как пользователь");
+        }
+
         try {
             orderInvoker.addDish(dishName, orderDecorator);
             return ResponseEntity.ok("Блюдо успешно добавлено в меню");
@@ -55,6 +94,10 @@ public class ClientController implements ClientApi {
     @Override
     @PutMapping("/add-in-order/{dishName}/{amount}")
     public ResponseEntity<String> addInOrder(@PathVariable String dishName, @PathVariable int amount) {
+        if (!authService.isEnterAsUser()) {
+            return ResponseEntity.badRequest().body("Вы не вошли как пользователь");
+        }
+
         try {
             for (int i = 0; i<amount; ++i) {
                 orderInvoker.addDish(dishName, orderDecorator);
@@ -68,6 +111,10 @@ public class ClientController implements ClientApi {
     @Override
     @PostMapping("/prepare-order")
     public ResponseEntity<String> prepareOrder() throws InterruptedException {
+        if (!authService.isEnterAsUser()) {
+            return ResponseEntity.badRequest().body("Вы не вошли как пользователь");
+        }
+
         try {
             orderInvoker.prepare(orderDecorator);
             return ResponseEntity.ok("Готовится. Ожидайте.");
@@ -80,6 +127,10 @@ public class ClientController implements ClientApi {
     @Override
     @PostMapping("/pay-for-order")
     public ResponseEntity<String> payForOrder() throws OrderIsNotAlreadyCookedException {
+        if (!authService.isEnterAsUser()) {
+            return ResponseEntity.badRequest().body("Вы не вошли как пользователь");
+        }
+
         try {
             orderInvoker.pay(orderDecorator);
             return ResponseEntity.ok("Успешно оплачено!");
@@ -91,6 +142,10 @@ public class ClientController implements ClientApi {
     @Override
     @GetMapping("/get-order")
     public ResponseEntity<String> getOrder() throws OrderIsNotAlreadyCookedException, OrderIsNotPayedException, OrderIsNotCreatedYetException {
+        if (!authService.isEnterAsUser()) {
+            return ResponseEntity.badRequest().body("Вы не вошли как пользователь");
+        }
+
         try {
             return ResponseEntity.ok(orderInvoker.getOrder(orderDecorator).toString());
         } catch (Exception e) {
@@ -101,6 +156,10 @@ public class ClientController implements ClientApi {
     @Override
     @PostMapping("/cansel-order")
     public ResponseEntity<String> canselOrder() {
+        if (!authService.isEnterAsUser()) {
+            return ResponseEntity.badRequest().body("Вы не вошли как пользователь");
+        }
+
         try {
             orderInvoker.cansel(orderDecorator);
             return ResponseEntity.ok("Отменено.");
@@ -112,6 +171,10 @@ public class ClientController implements ClientApi {
     @Override
     @GetMapping("/get-order-info")
     public ResponseEntity<String> getOrderInfo() {
+        if (!authService.isEnterAsUser()) {
+            return ResponseEntity.badRequest().body("Вы не вошли как пользователь");
+        }
+
         return ResponseEntity.ok(orderInvoker.getOrderInfo(orderDecorator));
     }
 }
