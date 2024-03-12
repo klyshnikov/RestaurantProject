@@ -24,19 +24,22 @@ import java.util.List;
 public class ClientController implements ClientApi {
     private final OrderInvoker orderInvoker;
     private final OrderDecorator orderDecorator;
-    private final AuthService authService;
+    private final AuthService authService = new AuthService();
 
     // Auth
 
     @PostMapping("/register")
     @Operation(summary = "Регистрация пользователя")
     public ResponseEntity<String> register(@RequestBody User user) throws IOException {
-        System.out.println("111");
-        if (authService.register(user)) {
-            return ResponseEntity.ok("Успешно зарегистрированы");
-        }
+        try {
+            if (authService.register(user)) {
+                return ResponseEntity.ok("Успешно зарегистрированы");
+            }
 
-        return ResponseEntity.badRequest().body("Регистрация не удалась. Возможно, данный пользователь уже существует");
+            return ResponseEntity.badRequest().body("Регистрация не удалась. Возможно, данный пользователь уже существует");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.toString());
+        }
     }
 
     @PostMapping("/login/{login}/{password}")
@@ -156,7 +159,7 @@ public class ClientController implements ClientApi {
         }
 
         try {
-            return ResponseEntity.ok(orderInvoker.getOrder(orderDecorator).toString());
+            return ResponseEntity.ok("Успешно! Для получения заказа пройдите по ссылке: https://youtu.be/g7tzDP3oI2Y");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.toString());
         }

@@ -3,6 +3,9 @@ package ru.hse.restaurant.project.repository;
 import org.springframework.stereotype.Component;
 import ru.hse.restaurant.project.entity.Dish;
 import ru.hse.restaurant.project.entity.Review;
+import ru.hse.restaurant.project.exceptions.DishIsNotFoundException;
+import ru.hse.restaurant.project.exceptions.PriceLessThanZeroException;
+import ru.hse.restaurant.project.exceptions.TimeToCookLessThanZeroException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +40,9 @@ public class SimpleDishRepository implements DishRepository {
             }
         }
 
+        if (finded == null) {
+            throw new DishIsNotFoundException();
+        }
         return finded;
     }
 
@@ -52,6 +58,14 @@ public class SimpleDishRepository implements DishRepository {
                 dishes.set(i, dish);
                 return;
             }
+        }
+
+        if (dish.getPrice() <= 0) {
+            throw new PriceLessThanZeroException();
+        }
+
+        if (dish.getTimeToCook() <= 0) {
+            throw new TimeToCookLessThanZeroException();
         }
 
         dishes.add(dish);

@@ -9,6 +9,7 @@ import ru.hse.restaurant.project.repository.JsonAuthRepository;
 
 import java.io.Console;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.Objects;
 
 @Component
@@ -17,6 +18,10 @@ public class AuthService {
     public User user = null;
 
     public Boolean register(User user) throws IOException {
+        if (!Objects.equals(user.role, "Client") && !Objects.equals(user.role, "Admin")) {
+            throw new RemoteException("role должно быть либо Admin, либо Client");
+        }
+
         if (!authRepository.isExist(user.name)) {
             authRepository.addUser(user);
             this.user = user;

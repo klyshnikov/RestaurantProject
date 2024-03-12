@@ -22,18 +22,23 @@ import java.util.List;
 public class AdminController implements AdminApi {
 
     private final DishRepository dishRepository;
-    private final AuthService authService;
+    private final AuthService authService = new AuthService();
 
     // Auth
 
     @PostMapping("/register")
     @Operation(summary = "Регистрация")
     public ResponseEntity<String> register(@RequestBody User user) throws IOException {
-        if (authService.register(user)) {
-            return ResponseEntity.ok("Успешно зарегистрированы");
+        try {
+            if (authService.register(user)) {
+                return ResponseEntity.ok("Успешно зарегистрированы");
+            }
+
+            return ResponseEntity.badRequest().body("Регистрация не удалась. Возможно, данный пользователь уже существует");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.toString());
         }
 
-        return ResponseEntity.badRequest().body("Регистрация не удалась. Возможно, данный пользователь уже существует");
     }
 
     @PostMapping("/login/{login}/{password}")
@@ -64,6 +69,7 @@ public class AdminController implements AdminApi {
             dishRepository.addDish(dish);
             return ResponseEntity.ok("Добавлено!");
         } catch (Exception e) {
+            System.out.println("here");
             return ResponseEntity.badRequest().body(e.toString());
         }
     }

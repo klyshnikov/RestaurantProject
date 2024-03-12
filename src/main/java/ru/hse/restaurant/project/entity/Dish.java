@@ -8,7 +8,7 @@ import java.time.Duration;
 
 @Data
 public class Dish {
-    private int id;
+    //private int id;
     private String name;
     private double price;
     private int timeToCook;
@@ -27,7 +27,6 @@ public class Dish {
     }
 
     public void setPrice(double value) throws PriceLessThanZeroException {
-        if (value <= 0) throw new PriceLessThanZeroException("Price can't be less than 0");
         price = value;
     }
 
@@ -36,7 +35,6 @@ public class Dish {
     }
 
     public void setTimeToCook(int value) throws TimeToCookLessThanZeroException {
-        if ( value <= 0 ) throw new TimeToCookLessThanZeroException("Cooking time can't be less than 0");
         timeToCook = value;
     }
 
