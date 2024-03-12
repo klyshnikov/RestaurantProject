@@ -128,6 +128,14 @@ public class Waiter implements OrderInvoker {
         }
 
         result.append("Статус: ");
+        switch (orderDecorator.getOrderState().name()) {
+            case ("Stage1_NotExist") -> result.append("Заказ не создан");
+            case ("Stage2_Creating") -> result.append("Заказ на стадии сборки. Можете добавлять блюда");
+            case ("Stage3_Preparing") -> result.append("Заказ готовится на кухне");
+            case ("Stage4_Ready") -> result.append("Заказ готов и ожидает оплаты");
+            case ("Stage5_Payed") -> result.append("Заказ оплачен - можете получить его");
+            default -> {}
+        }
         result.append(orderDecorator.getOrderState().name());
         result.append("\n");
 
