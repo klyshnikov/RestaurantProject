@@ -8,7 +8,6 @@ import ru.hse.restaurant.project.entity.Dish;
 import ru.hse.restaurant.project.entity.User;
 import ru.hse.restaurant.project.exceptions.PriceLessThanZeroException;
 import ru.hse.restaurant.project.exceptions.TimeToCookLessThanZeroException;
-import ru.hse.restaurant.project.repository.AuthRepository;
 import ru.hse.restaurant.project.repository.DishRepository;
 import ru.hse.restaurant.project.service.AuthService;
 
@@ -26,7 +25,7 @@ public class AdminController implements AdminApi {
 
     // Auth
 
-    @GetMapping("/register")
+    @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody User user) throws IOException {
         if (authService.register(user)) {
             return ResponseEntity.ok("Успешно зарегистрированы");
@@ -35,7 +34,7 @@ public class AdminController implements AdminApi {
         return ResponseEntity.badRequest().body("Регистрация не удалась. Возможно, данный пользователь уже существует");
     }
 
-    @GetMapping("/login/{login}/{password}")
+    @PostMapping("/login/{login}/{password}")
     public ResponseEntity<String> login(@PathVariable String login, @PathVariable String password) throws IOException {
         if (authService.login(login, password)) {
             return ResponseEntity.ok("Вы успешно вошли");
@@ -44,7 +43,7 @@ public class AdminController implements AdminApi {
         return ResponseEntity.badRequest().body("Неуспешная попытка входа");
     }
 
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     public ResponseEntity<String> logout() {
         return ResponseEntity.ok("Вы вышли");
     }

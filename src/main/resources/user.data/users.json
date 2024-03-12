@@ -1,1 +1,1 @@
-{"users":[{"name":"misha","login":"string","password":"string","role":"Client"}]}
+{"users":[{"name":"string","login":"string","password":"string","role":"Admin"},{"name":"i","login":"i","password":"i","role":"Client"}]}

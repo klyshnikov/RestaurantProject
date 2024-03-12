@@ -12,7 +12,6 @@ import java.util.Objects;
 
 public class JsonAuthRepository implements AuthRepository {
 
-    public Boolean em = true;
     public ObjectMapper jsonMapper = new ObjectMapper();
 
     public String getFile() {
@@ -44,16 +43,21 @@ public class JsonAuthRepository implements AuthRepository {
 
     @Override
     public void addUser(User user) throws IOException {
-        if (em) {
-            List<User> u = new ArrayList<User>();
-            u.add(user);
-            setUser(u);
-            em = false;
-        } else {
-            List<User> users = getUsers();
-            users.add(user);
-            setUser(users);
+        List<User> users = getUsers();
+        users.add(user);
+        setUser(users);
+    }
+
+    @Override
+    public Boolean isExist(String name) throws IOException {
+        List<User> users = getUsers();
+        for (User user : users) {
+            if (Objects.equals(user.name, name)) {
+                return true;
+            }
         }
+
+        return false;
     }
 
     @Override

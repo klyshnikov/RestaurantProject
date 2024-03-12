@@ -87,7 +87,7 @@ public class ClientController implements ClientApi {
             orderInvoker.addDish(dishName, orderDecorator);
             return ResponseEntity.ok("Блюдо успешно добавлено в меню");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Неизвестная ошибка!");
+            return ResponseEntity.badRequest().body(e.toString());
         }
     }
 

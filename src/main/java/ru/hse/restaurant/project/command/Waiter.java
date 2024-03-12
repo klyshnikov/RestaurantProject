@@ -32,6 +32,10 @@ public class Waiter implements OrderInvoker {
     public void addDish(String dishName, OrderDecorator orderDecorator) {
         if (orderDecorator.getOrderState() == OrderState.Stage2_Creating) {
             orderDecorator.addDish(dishRepository.getDish(dishName));
+        } else if (orderDecorator.getOrderState() == OrderState.Stage1_NotExist) {
+            throw new RuntimeException("Заказ не создан");
+        } else {
+            throw new RuntimeException("Уже поздно добавлять блюда в заказ");
         }
     }
 

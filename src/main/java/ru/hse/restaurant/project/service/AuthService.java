@@ -17,16 +17,16 @@ public class AuthService {
     public User user = null;
 
     public Boolean register(User user) throws IOException {
-//        if (!authRepository.isExist(user.login, user.password)) {
-//            authRepository.addUser(user);
-//            this.user = user;
-//            return true;
-//        }
-//
-//        return false;
-        authRepository.addUser(user);
-        this.user = user;
-        return true;
+        if (!authRepository.isExist(user.name)) {
+            authRepository.addUser(user);
+            this.user = user;
+            return true;
+        }
+
+        return false;
+//        authRepository.addUser(user);
+//        this.user = user;
+//        return true;
     }
 
     public Boolean login(String login, String password) throws IOException {
