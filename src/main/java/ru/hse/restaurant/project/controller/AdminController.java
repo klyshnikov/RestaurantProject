@@ -1,5 +1,6 @@
 package ru.hse.restaurant.project.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ public class AdminController implements AdminApi {
     // Auth
 
     @PostMapping("/register")
+    @Operation(summary = "Регистрация")
     public ResponseEntity<String> register(@RequestBody User user) throws IOException {
         if (authService.register(user)) {
             return ResponseEntity.ok("Успешно зарегистрированы");
@@ -35,6 +37,7 @@ public class AdminController implements AdminApi {
     }
 
     @PostMapping("/login/{login}/{password}")
+    @Operation(summary = "Вход по логину и паролю")
     public ResponseEntity<String> login(@PathVariable String login, @PathVariable String password) throws IOException {
         if (authService.login(login, password)) {
             return ResponseEntity.ok("Вы успешно вошли");
@@ -44,12 +47,14 @@ public class AdminController implements AdminApi {
     }
 
     @PostMapping("/logout")
+    @Operation(summary = "Выход")
     public ResponseEntity<String> logout() {
         return ResponseEntity.ok("Вы вышли");
     }
 
     @Override
     @PostMapping("/add-dish-to-menu")
+    @Operation(summary = "Добавление нового блюда в меню.")
     public ResponseEntity<String> addDishToMenu(@RequestBody Dish dish) throws TimeToCookLessThanZeroException, PriceLessThanZeroException {
         if (!authService.isEnterAsAdmin()) {
             return ResponseEntity.badRequest().body("Вы не вошли как админ");
@@ -65,6 +70,7 @@ public class AdminController implements AdminApi {
 
     @Override
     @PutMapping("/set-name/{dishName}/{newName}")
+    @Operation(summary = "Изменение названия названия блюда. Первый {dishName} - старое имя, {newName} - новое")
     public ResponseEntity<String> setName(@PathVariable String dishName, @PathVariable String newName) {
         if (!authService.isEnterAsAdmin()) {
             return ResponseEntity.badRequest().body("Вы не вошли как админ");
@@ -83,6 +89,7 @@ public class AdminController implements AdminApi {
 
     @Override
     @PutMapping("/set-time-to-cook/{dishName}/{secondsToCook}")
+    @Operation(summary = "Установка времени приготовления заказа. {dishName} - название блюда, {secondsToCook} - кол-во секунд готовки")
     public ResponseEntity<String> setTimeToCook(@PathVariable String dishName, @PathVariable int secondsToCook) throws TimeToCookLessThanZeroException {
         if (!authService.isEnterAsAdmin()) {
             return ResponseEntity.badRequest().body("Вы не вошли как админ");
@@ -100,6 +107,7 @@ public class AdminController implements AdminApi {
 
     @Override
     @PutMapping("/set-prise/{dishName}/{prise}")
+    @Operation(summary = "Изменение цены заказа . {dishName} - название блюда, {price} - цена")
     public ResponseEntity<String> setPrise(@PathVariable String dishName, @PathVariable double prise) throws PriceLessThanZeroException {
         if (!authService.isEnterAsAdmin()) {
             return ResponseEntity.badRequest().body("Вы не вошли как админ");
@@ -117,6 +125,7 @@ public class AdminController implements AdminApi {
 
     @Override
     @PutMapping("/set-description/{dishName}")
+    @Operation(summary = "Изменение описания заказа. {dishName} - название блюда, {description} - описание")
     public ResponseEntity<String> setDescription(@PathVariable String dishName, @RequestBody String description) {
         if (!authService.isEnterAsAdmin()) {
             return ResponseEntity.badRequest().body("Вы не вошли как админ");
@@ -134,6 +143,7 @@ public class AdminController implements AdminApi {
 
     @Override
     @PutMapping("/delete-dish")
+    @Operation(summary = "Удаление заказа.")
     public ResponseEntity<String> deleteDish(String name) {
         if (!authService.isEnterAsAdmin()) {
             return ResponseEntity.badRequest().body("Вы не вошли как админ");
@@ -148,6 +158,7 @@ public class AdminController implements AdminApi {
     }
 
     @GetMapping("/get-menu")
+    @Operation(summary = "Получение меню")
     public List<Dish> getMenu() {
         return dishRepository.getAllDishes();
     }

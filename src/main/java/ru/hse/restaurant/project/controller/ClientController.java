@@ -29,6 +29,7 @@ public class ClientController implements ClientApi {
     // Auth
 
     @PostMapping("/register")
+    @Operation(summary = "Регистрация пользователя")
     public ResponseEntity<String> register(@RequestBody User user) throws IOException {
         System.out.println("111");
         if (authService.register(user)) {
@@ -39,6 +40,7 @@ public class ClientController implements ClientApi {
     }
 
     @PostMapping("/login/{login}/{password}")
+    @Operation(summary = "Вход по логину и паролю")
     public ResponseEntity<String> login(@PathVariable String login, @PathVariable String password) throws IOException {
         System.out.println("111");
         if (authService.login(login, password)) {
@@ -49,19 +51,21 @@ public class ClientController implements ClientApi {
     }
 
     @PostMapping("/logout")
+    @Operation(summary = "Выход")
     public ResponseEntity<String> logout() {
         return ResponseEntity.ok("Вы вышли");
     }
 
     @Override
     @GetMapping("/get-menu")
+    @Operation(summary = "Получить блюда из меню")
     public ResponseEntity<List<Dish>> getMenu() {
         return ResponseEntity.ok(orderInvoker.getActualMenu());
     }
 
     @Override
-    @Operation(summary = "Создание заказа")
     @PostMapping("/create-order")
+    @Operation(summary = "Создание нового заказа")
     public ResponseEntity<String> createOrder() {
         if (!authService.isEnterAsUser()) {
             return ResponseEntity.badRequest().body("Вы не вошли как пользователь");
@@ -78,6 +82,7 @@ public class ClientController implements ClientApi {
     @Override
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/add-in-order/{dishName}")
+    @Operation(summary = "Добавление блюда из меню в заказ. {dishName} - название блюда")
     public ResponseEntity<String> addInOrder(@PathVariable String dishName) {
         if (!authService.isEnterAsUser()) {
             return ResponseEntity.badRequest().body("Вы не вошли как пользователь");
@@ -93,6 +98,7 @@ public class ClientController implements ClientApi {
 
     @Override
     @PutMapping("/add-in-order/{dishName}/{amount}")
+    @Operation(summary = "Добавление блюда из меню в заказ. {dishName} - название блюда, {amount} - кол-во блюд")
     public ResponseEntity<String> addInOrder(@PathVariable String dishName, @PathVariable int amount) {
         if (!authService.isEnterAsUser()) {
             return ResponseEntity.badRequest().body("Вы не вошли как пользователь");
@@ -110,6 +116,7 @@ public class ClientController implements ClientApi {
 
     @Override
     @PostMapping("/prepare-order")
+    @Operation(summary = "Отправить блюдо готовиться на кухню")
     public ResponseEntity<String> prepareOrder() throws InterruptedException {
         if (!authService.isEnterAsUser()) {
             return ResponseEntity.badRequest().body("Вы не вошли как пользователь");
@@ -126,6 +133,7 @@ public class ClientController implements ClientApi {
 
     @Override
     @PostMapping("/pay-for-order")
+    @Operation(summary = "Заплатить за заказ")
     public ResponseEntity<String> payForOrder() throws OrderIsNotAlreadyCookedException {
         if (!authService.isEnterAsUser()) {
             return ResponseEntity.badRequest().body("Вы не вошли как пользователь");
@@ -141,6 +149,7 @@ public class ClientController implements ClientApi {
 
     @Override
     @GetMapping("/get-order")
+    @Operation(summary = "Получить приготовленный и оплаченный заказ")
     public ResponseEntity<String> getOrder() throws OrderIsNotAlreadyCookedException, OrderIsNotPayedException, OrderIsNotCreatedYetException {
         if (!authService.isEnterAsUser()) {
             return ResponseEntity.badRequest().body("Вы не вошли как пользователь");
@@ -155,6 +164,7 @@ public class ClientController implements ClientApi {
 
     @Override
     @PostMapping("/cansel-order")
+    @Operation(summary = "Отменить заказ")
     public ResponseEntity<String> canselOrder() {
         if (!authService.isEnterAsUser()) {
             return ResponseEntity.badRequest().body("Вы не вошли как пользователь");
@@ -170,6 +180,7 @@ public class ClientController implements ClientApi {
 
     @Override
     @GetMapping("/get-order-info")
+    @Operation(summary = "Получить информацию о вашем заказе")
     public ResponseEntity<String> getOrderInfo() {
         if (!authService.isEnterAsUser()) {
             return ResponseEntity.badRequest().body("Вы не вошли как пользователь");

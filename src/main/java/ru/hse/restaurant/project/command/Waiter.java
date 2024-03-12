@@ -136,7 +136,6 @@ public class Waiter implements OrderInvoker {
             case ("Stage5_Payed") -> result.append("Заказ оплачен - можете получить его");
             default -> {}
         }
-        result.append(orderDecorator.getOrderState().name());
         result.append("\n");
 
         result.append("Приготовлено блюд: ");

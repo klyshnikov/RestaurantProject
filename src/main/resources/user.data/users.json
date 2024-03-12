@@ -1,1 +1,1 @@
-{"users":[{"name":"string","login":"string","password":"string","role":"Admin"},{"name":"i","login":"i","password":"i","role":"Client"}]}
+{"users":[{"name":"string","login":"string","password":"string","role":"Admin"},{"name":"i","login":"i","password":"i","role":"Client"},{"name":"cl","login":"cl","password":"cl","role":"Client"},{"name":"ad","login":"ad","password":"d","role":"Admin"}]}
